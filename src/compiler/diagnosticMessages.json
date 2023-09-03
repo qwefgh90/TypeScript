@@ -3607,7 +3607,7 @@
         "category": "Error",
         "code": 2839
     },
-    "An interface cannot extend a primitive type like '{0}'; an interface can only extend named types and classes": {
+    "An interface cannot extend a primitive type like '{0}'; an interface can only extend named types and classes.": {
         "category": "Error",
         "code": 2840
     },
@@ -3662,6 +3662,14 @@
     "Top-level 'await using' statements are only allowed when the 'module' option is set to 'es2022', 'esnext', 'system', 'node16', or 'nodenext', and the 'target' option is set to 'es2017' or higher.": {
         "category": "Error",
         "code": 2854
+    },
+    "A class cannot extend a primitive type like '{0}'; a class can only extend named types and classes.": {
+        "category": "Error",
+        "code": 2855
+    },
+    "A class cannot implement a primitive type like '{0}'; a class can only implement interfaces.": {
+        "category": "Error",
+        "code": 2856
     },
 
     "Import declaration '{0}' is using private name '{1}'.": {
