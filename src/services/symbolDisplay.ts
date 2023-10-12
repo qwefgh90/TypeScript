@@ -19,10 +19,11 @@ import {
     GetAccessorDeclaration,
     getCombinedLocalAndExportSymbolFlags,
     getDeclarationOfKind,
+    // getDeclarationsOfKind,
     getExternalModuleImportEqualsDeclarationExpression,
     getMeaningFromLocation,
     getNameOfDeclaration,
-    getNodeKind,
+    // getNodeKind,
     getNodeModifiers,
     getObjectFlags,
     getParseTreeNode,
@@ -123,27 +124,27 @@ export function getSymbolKind(typeChecker: TypeChecker, symbol: Symbol, location
 
     const flags = getCombinedLocalAndExportSymbolFlags(symbol);
 
-    if (flags & SymbolFlags.Class || 
-        flags & SymbolFlags.Enum ||
-        flags & SymbolFlags.TypeAlias ||
-        flags & SymbolFlags.Interface ||
-        flags & SymbolFlags.TypeParameter ||
-        flags & SymbolFlags.EnumMember ||
-        flags & SymbolFlags.Alias ||
-        flags & SymbolFlags.Module) return getNodeKind(location.parent);
+    // if (flags & SymbolFlags.Class || 
+    //     flags & SymbolFlags.Enum ||
+    //     flags & SymbolFlags.TypeAlias ||
+    //     flags & SymbolFlags.Interface ||
+    //     flags & SymbolFlags.TypeParameter ||
+    //     flags & SymbolFlags.EnumMember ||
+    //     flags & SymbolFlags.Alias ||
+    //     flags & SymbolFlags.Module) return getNodeKind(location.parent);
         
 
-    // if (flags & SymbolFlags.Class) {
-    //     return getDeclarationOfKind(symbol, SyntaxKind.ClassExpression) ?
-    //         ScriptElementKind.localClassElement : ScriptElementKind.classElement;
-    // }
-    // if (flags & SymbolFlags.Enum) return ScriptElementKind.enumElement;
-    // if (flags & SymbolFlags.TypeAlias) return ScriptElementKind.typeElement;
-    // if (flags & SymbolFlags.Interface) return ScriptElementKind.interfaceElement;
-    // if (flags & SymbolFlags.TypeParameter) return ScriptElementKind.typeParameterElement;
-    // if (flags & SymbolFlags.EnumMember) return ScriptElementKind.enumMemberElement;
-    // if (flags & SymbolFlags.Alias) return ScriptElementKind.alias;
-    // if (flags & SymbolFlags.Module) return ScriptElementKind.moduleElement;
+    if (flags & SymbolFlags.Class) {
+        return getDeclarationOfKind(symbol, SyntaxKind.ClassExpression) ?
+            ScriptElementKind.localClassElement : ScriptElementKind.classElement;
+    }
+    if (flags & SymbolFlags.Enum) return ScriptElementKind.enumElement;
+    if (flags & SymbolFlags.TypeAlias) return ScriptElementKind.typeElement;
+    if (flags & SymbolFlags.Interface) return ScriptElementKind.interfaceElement;
+    if (flags & SymbolFlags.TypeParameter) return ScriptElementKind.typeParameterElement;
+    if (flags & SymbolFlags.EnumMember) return ScriptElementKind.enumMemberElement;
+    if (flags & SymbolFlags.Alias) return ScriptElementKind.alias;
+    if (flags & SymbolFlags.Module) return ScriptElementKind.moduleElement;
 
     return result;
 }
@@ -696,7 +697,16 @@ function getSymbolDisplayPartsDocumentationAndSymbolKindWorker(typeChecker: Type
             }
         }
         else {
-            symbolKind = getSymbolKind(typeChecker, symbol, location);
+            if(symbol.flags & SymbolFlags.Class && enclosingDeclaration?.kind === SyntaxKind.ClassDeclaration)
+                symbolKind = ScriptElementKind.classElement;
+            else if(symbol.flags & SymbolFlags.Module && enclosingDeclaration?.kind === SyntaxKind.ModuleDeclaration)
+                symbolKind = ScriptElementKind.moduleElement;
+            else if(symbol.flags & SymbolFlags.Interface && enclosingDeclaration?.kind === SyntaxKind.InterfaceDeclaration)
+                symbolKind = ScriptElementKind.interfaceElement;
+            else if(symbol.flags & SymbolFlags.Enum && enclosingDeclaration?.kind === SyntaxKind.EnumDeclaration)
+                symbolKind = ScriptElementKind.enumElement;
+            else
+                symbolKind = getSymbolKind(typeChecker, symbol, location);
         }
     }
 
